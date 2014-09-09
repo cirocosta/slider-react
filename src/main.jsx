@@ -4,8 +4,9 @@
 
 var React = require('react');
 var Slider = require('./components/Slider.jsx');
+var Items = require('./components/Items.jsx');
 
 React.renderComponent(
-	<Slider points={[1,2,3,4]} width={500} height={30} />,
+  <div><Slider points={[1,2,3,4]} width={500} height={30} /><Items /></div>,
 	document.querySelector("#react-slider")
 );

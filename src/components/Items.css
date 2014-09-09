@@ -1,0 +1,8 @@
+.Item.highlight {
+	background-color: none;
+	transition: background-color .3s ease-in;
+}
+
+.Item.highlight-yellow {
+	background-color: yellow
+}
