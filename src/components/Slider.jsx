@@ -20,8 +20,12 @@ var Slider = React.createClass({
 	},
 
 	getInitialState () {
+    var pip = utils.getSlices(this.props.width, this.props.points);
+    pip[pip.length - 1] -= this.props.height;
+
 		return {
-			position: 0
+			position: 0,
+      pip: pip
 		}
 	},
 
@@ -43,14 +47,12 @@ var Slider = React.createClass({
     var pos = utils.Drag.normalize(e);
     var w = this.props.width;
     var h = this.props.height;
-    var pip = utils.getSlices(w, this.props.points);
-    pip[pip.length - 1] -= h;
 
     if (utils.Drag.exceedsLeft(pos) ||
         utils.Drag.exceedsRight(pos, w, h))
       return;
 
-    var nearest = utils.getNearest(pos, pip);
+    var nearest = utils.getNearest(pos, this.state.pip);
 
     if (this.props.onPoint)
       this.props.onPoint(pip.indexOf(nearest));
@@ -72,14 +74,25 @@ var Slider = React.createClass({
 			width: this.props.height
 		};
 
+    var points = this.state.pip.map((pxLeft) =>
+      <span className="point"
+            style={{
+              transform: 'translate(' +
+                          (pxLeft | 0) +
+                        'px, 0px)'}}>
+        {this.state.pip.indexOf(pxLeft)}
+      </span>
+    );
+
 		return (
 			<div className="Slider" style={sliderStyle}>
-				<span draggable="true"
-							style={selectorStyle}
-							onDragStart={this.handleDragStart}
-							onDrag={this.handleDrag}
-							onDragEnd={this.handleDragEnd}>
-				</span>
+        <span draggable="true"
+              style={selectorStyle}
+              onDragStart={this.handleDragStart}
+              onDrag={this.handleDrag}
+              onDragEnd={this.handleDragEnd}>
+        </span>
+        {points}
 			</div>
 		);
 	}

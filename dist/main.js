@@ -95,8 +95,12 @@
 		},
 	
 		getInitialState:function () {
+	    var pip = utils.getSlices(this.props.width, this.props.points);
+	    pip[pip.length - 1] -= this.props.height;
+	
 			return {
-				position: 0
+				position: 0,
+	      pip: pip
 			}
 		},
 	
@@ -118,14 +122,12 @@
 	    var pos = utils.Drag.normalize(e);
 	    var w = this.props.width;
 	    var h = this.props.height;
-	    var pip = utils.getSlices(w, this.props.points);
-	    pip[pip.length - 1] -= h;
 	
 	    if (utils.Drag.exceedsLeft(pos) ||
 	        utils.Drag.exceedsRight(pos, w, h))
 	      return;
 	
-	    var nearest = utils.getNearest(pos, pip);
+	    var nearest = utils.getNearest(pos, this.state.pip);
 	
 	    if (this.props.onPoint)
 	      this.props.onPoint(pip.indexOf(nearest));
@@ -147,14 +149,25 @@
 				width: this.props.height
 			};
 	
+	    var points = this.state.pip.map(function(pxLeft) 
+	      {return React.DOM.span({className: "point", 
+	            style: {
+	              transform: 'translate(' +
+	                          (pxLeft | 0) +
+	                        'px, 0px)'}}, 
+	        this.state.pip.indexOf(pxLeft)
+	      );}.bind(this)
+	    );
+	
 			return (
 				React.DOM.div({className: "Slider", style: sliderStyle}, 
-					React.DOM.span({draggable: "true", 
-								style: selectorStyle, 
-								onDragStart: this.handleDragStart, 
-								onDrag: this.handleDrag, 
-								onDragEnd: this.handleDragEnd}
-					)
+	        React.DOM.span({draggable: "true", 
+	              style: selectorStyle, 
+	              onDragStart: this.handleDragStart, 
+	              onDrag: this.handleDrag, 
+	              onDragEnd: this.handleDragEnd}
+	        ), 
+	        points
 				)
 			);
 		}
@@ -369,7 +382,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(/*! ./~/css-loader/cssToString.js */ 13)();
-	exports.push([module.id, ".Slider {\n\twidth: 400px;\n\tdisplay: inline-block;\n\theight: 30px;\n\tbackground: #D0D0D0;\n}\n\n.Slider span {\n\twidth: 30px;\n\theight: 30px;\n\tbackground: #C0C0C0;\n\tdisplay: inherit;\n}\n", ""]);
+	exports.push([module.id, ".Slider {\n\twidth: 400px;\n\tdisplay: inline-block;\n\theight: 30px;\n\tbackground: #D0D0D0;\n}\n\n.Slider span[draggable=true] {\n\twidth: 30px;\n\theight: 30px;\n\tbackground: #C0C0C0;\n\tdisplay: block;\n\ttop: -18px;\n\tz-index: 1;\n}\n\n.Slider span.point {\n\twidth: 5px;\n\tdisplay: inline-block;\n\theight: 30px;\n\tbackground-color: steelblue;\n}\n", ""]);
 
 /***/ },
 /* 8 */

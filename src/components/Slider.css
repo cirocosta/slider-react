@@ -5,9 +5,18 @@
 	background: #D0D0D0;
 }
 
-.Slider span {
+.Slider span[draggable=true] {
 	width: 30px;
 	height: 30px;
 	background: #C0C0C0;
-	display: inherit;
+	display: block;
+	top: -18px;
+	z-index: 1;
+}
+
+.Slider span.point {
+	width: 5px;
+	display: inline-block;
+	height: 30px;
+	background-color: steelblue;
 }
