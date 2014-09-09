@@ -1,0 +1,20 @@
+{
+  "name": "learn-svg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Ciro S. Costa <ciro9758@gmail.com> (http://www.cirocosta.com/)",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack --watch -d"
+  },
+  "devDependencies": {
+    "css-loader": "^0.8.0",
+    "jsx-loader": "^0.11.0",
+    "style-loader": "^0.8.0",
+    "webpack": "^1.4.0-beta4"
+  },
+  "dependencies": {
+    "react": "^0.11.1"
+  }
+}

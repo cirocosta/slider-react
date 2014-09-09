@@ -1,0 +1,13 @@
+.Slider {
+	width: 400px;
+	display: inline-block;
+	height: 30px;
+	background: #D0D0D0;
+}
+
+.Slider span {
+	width: 30px;
+	height: 30px;
+	background: #C0C0C0;
+	display: inherit;
+}
