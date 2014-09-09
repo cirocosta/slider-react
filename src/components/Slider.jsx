@@ -6,18 +6,7 @@
 
 require('./Slider.css');
 var React = require('react');
-
-/**
- * Auxiliary functions for getting the positions
- * of the slider.
- */
-var DragUtils = {
-	getMaxLeft: (e) => e.target.parentNode.offsetLeft,
-	getMaxRight: (e, w, h) => e.target.parentNode.offsetLeft + w - h,
-	normalize: (e) => e.clientX - e.target.parentNode.offsetLeft,
-	exceedsLeft: (pos) => pos < 0,
-	exceedsRight: (pos, w, h) => pos > w - h
-};
+var utils = require('./utils');
 
 /**
  * The slider component
@@ -27,7 +16,7 @@ var Slider = React.createClass({
 		points: React.PropTypes.array.isRequired,
 		width: React.PropTypes.number.isRequired,
 		height: React.PropTypes.number.isRequired,
-    onPointTime: React.PropTypes.func
+    onPoint: React.PropTypes.func
 	},
 
 	getInitialState () {
@@ -36,23 +25,40 @@ var Slider = React.createClass({
 		}
 	},
 
-  // componentWillMount () {
-  //   this.props.points
-  // },
-
 	handleDrag (e) {
-		var pos = DragUtils.normalize(e);
+		var pos = utils.Drag.normalize(e);
 		var w = this.props.width;
 		var h = this.props.height;
 
-		if (DragUtils.exceedsLeft(pos) ||
-				DragUtils.exceedsRight(pos, w, h))
+		if (utils.Drag.exceedsLeft(pos) ||
+				utils.Drag.exceedsRight(pos, w, h))
 			return;
 
 		this.setState({
 			position: pos
 		});
 	},
+
+  handleDragEnd (e) {
+    var pos = utils.Drag.normalize(e);
+    var w = this.props.width;
+    var h = this.props.height;
+    var pip = utils.getSlices(w, this.props.points);
+    pip[pip.length - 1] -= h;
+
+    if (utils.Drag.exceedsLeft(pos) ||
+        utils.Drag.exceedsRight(pos, w, h))
+      return;
+
+    var nearest = utils.getNearest(pos, pip);
+
+    if (this.props.onPoint)
+      this.props.onPoint(pip.indexOf(nearest));
+
+    this.setState({
+      position: nearest
+    });
+  },
 
 	render () {
 		var sliderStyle = {
@@ -72,7 +78,7 @@ var Slider = React.createClass({
 							style={selectorStyle}
 							onDragStart={this.handleDragStart}
 							onDrag={this.handleDrag}
-							onDragEnd={this.handleDrag}>
+							onDragEnd={this.handleDragEnd}>
 				</span>
 			</div>
 		);
