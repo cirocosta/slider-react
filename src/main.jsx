@@ -13,5 +13,5 @@ React.renderComponent(
             height={30} />
     <Items />
   </div>,
-	document.querySelector("#react-slider")
+  document.querySelector("#react-slider")
 );
